@@ -11,7 +11,7 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "[ -d '.venv' ] && echo 'PASS' || (python3 -m venv .venv && pip install --upgrade pip)"
+            "command": "[ -d '.venv' ] && echo 'PASS' || (python3 -m venv .venv && .venv/bin/pip install --upgrade pip)"
         },
         {
             "label": "Resources",
