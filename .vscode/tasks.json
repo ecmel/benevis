@@ -11,7 +11,7 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "[ -d '.venv' ] && echo 'Done' || (python3 -m venv .venv && pip install --upgrade pip)"
+            "command": "[ -d '.venv' ] && echo 'PASS' || (python3 -m venv .venv && pip install --upgrade pip)"
         },
         {
             "label": "Resources",
@@ -30,7 +30,7 @@
             "options": {
                 "cwd": "benevis/src/benevis/resources/models"
             },
-            "command": "[ -d 'vosk-model-small-en-us-0.15' ] && echo 'Done' || (curl --output - 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' | jar xvf /dev/stdin)"
+            "command": "[ -d 'vosk-model-small-en-us-0.15' ] && echo 'PASS' || (curl --output - 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' | jar xvf /dev/stdin)"
         },
         {
             "dependsOn": [
@@ -51,14 +51,6 @@
             "command": "../.venv/bin/briefcase dev"
         },
         {
-            "label": "Run",
-            "type": "shell",
-            "options": {
-                "cwd": "benevis"
-            },
-            "command": "../.venv/bin/briefcase run"
-        },
-        {
             "label": "Build",
             "type": "shell",
             "options": {
@@ -67,6 +59,28 @@
             "command": "../.venv/bin/briefcase build"
         },
         {
+            "dependsOn":[
+                "Build"
+            ],
+            "label": "Allow",
+            "type": "shell",
+            "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Mic?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
+        },
+        {
+            "dependsOn":[
+                "Allow"
+            ],
+            "label": "Run",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis"
+            },
+            "command": "../.venv/bin/briefcase run"
+        },
+        {
+            "dependsOn":[
+                "Allow"
+            ],
             "label": "Package",
             "type": "shell",
             "options": {
