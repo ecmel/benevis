@@ -1,0 +1,4 @@
+briefcase==0.3.6
+toga==0.3.0.dev32
+sounddevice==0.4.4
+vosk==0.3.32

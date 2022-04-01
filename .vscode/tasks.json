@@ -1,0 +1,78 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "git clean -Xdf"
+        },
+        {
+            "label": "Init",
+            "type": "shell",
+            "command": "[ -d '.venv' ] && echo 'Done' || (python3 -m venv .venv && pip install --upgrade pip)"
+        },
+        {
+            "label": "Resources",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis/src/benevis/resources"
+            },
+            "command": "mkdir -p models"
+        },
+        {
+            "dependsOn":[
+                "Resources"
+            ],
+            "label": "Bundle",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis/src/benevis/resources/models"
+            },
+            "command": "[ -d 'vosk-model-small-en-us-0.15' ] && echo 'Done' || (curl --output - 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' | jar xvf /dev/stdin)"
+        },
+        {
+            "dependsOn": [
+                "Init",
+                "Bundle"
+            ],
+            "dependsOrder": "sequence",
+            "label": "Install",
+            "type": "shell",
+            "command": ".venv/bin/pip install -r requirements.txt"
+        },
+        {
+            "label": "Debug",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis"
+            },
+            "command": "../.venv/bin/briefcase dev"
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis"
+            },
+            "command": "../.venv/bin/briefcase run"
+        },
+        {
+            "label": "Build",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis"
+            },
+            "command": "../.venv/bin/briefcase build"
+        },
+        {
+            "label": "Package",
+            "type": "shell",
+            "options": {
+                "cwd": "benevis"
+            },
+            "command": "../.venv/bin/briefcase package --no-sign"
+        }
+    ]
+}
