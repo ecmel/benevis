@@ -1,7 +1,7 @@
 # Benevis
 
-Easy Dictation
+Easy dictation.
 
-```
-tccutil reset Microphone
-```
+## Sponsor
+
+https://www.buymeacoffee.com/ecmel
