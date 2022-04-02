@@ -18,16 +18,14 @@ class Benevis(toga.App):
         self._impl.loop.call_soon_threadsafe(*args)
 
     def listen(self):
-        file_dir = os.path.dirname(__file__)
-        model_dir = os.path.join(
-            file_dir, "resources/models/vosk-model-small-en-us-0.15")
-        model = vosk.Model(model_dir)
-        self.rec = vosk.KaldiRecognizer(model, 16000)
+        dir = os.path.dirname(__file__)
+        model = vosk.Model(os.path.join(dir, self.model_name))
+        self.rec = vosk.KaldiRecognizer(model, self.sample_rate)
 
         self.stream = sd.RawInputStream(
-            samplerate=16000,
-            blocksize=8000,
-            device=None,
+            samplerate=self.sample_rate,
+            blocksize=self.blocksize,
+            device=self.device,
             dtype='int16',
             channels=1,
             callback=self.callback
@@ -35,10 +33,10 @@ class Benevis(toga.App):
 
         self.stream.start()
 
-    def do_start(self, widget):
+    def start(self, widget):
         widget.enabled = False
         self.btn_stop.enabled = True
-        
+
         self.partial = ""
 
         if self.stream:
@@ -46,7 +44,7 @@ class Benevis(toga.App):
         else:
             Thread(target=self.listen).start()
 
-    def do_stop(self, widget):
+    def stop(self, widget):
         widget.enabled = False
         self.btn_start.enabled = True
         self.stream.stop()
@@ -69,16 +67,21 @@ class Benevis(toga.App):
             self.run_later(self.update, f"{text} ", partial)
 
     def startup(self):
-        self.stream = {}
+        self.device = None
+        self.stream = None
+        self.blocksize = 8000
+        self.sample_rate = 16000
+        self.model_name = "resources/models/vosk-model-small-en-us-0.15"
 
         self.main_window = toga.MainWindow(title=self.name)
         self.multiline_input = toga.MultilineTextInput(style=Pack(flex=1))
-        
+
         self.btn_start = toga.Button(
-            "Start", on_press=self.do_start, style=Pack(flex=1))
-            
+            "Start", on_press=self.start, style=Pack(flex=1))
+
         self.btn_stop = toga.Button(
-            "Stop", on_press=self.do_stop, style=Pack(flex=1))
+            "Stop", on_press=self.stop, style=Pack(flex=1))
+
         self.btn_stop.enabled = False
 
         btn_box = toga.Box(
