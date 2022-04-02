@@ -14,6 +14,7 @@ from toga.style.pack import COLUMN, ROW
 class Benevis(toga.App):
 
     def do_start(self, widget):
+        self.partial = ""
         widget.enabled = False
         self.btn_stop.enabled = True
         self.stream.start()
@@ -23,26 +24,28 @@ class Benevis(toga.App):
         self.btn_start.enabled = True
         self.stream.stop()
 
-    def update(self, result):
-        self.multiline_input.value += result
+    def update(self, result, partial=False):
+        value = self.multiline_input.value.removesuffix(self.partial)
+        self.partial = result if partial else ""
+        self.multiline_input.value = value + result
 
     def callback(self, indata, frame_count, time_info, status):
         if self.rec.AcceptWaveform(bytes(indata)):
+            partial = False
             result = self.rec.Result()
-            print(result)
             text = json.loads(result)["text"]
-            if text:
-                self._impl.loop.call_soon_threadsafe(self.update, f"{text} ")
+        else:
+            partial = True
+            result = self.rec.PartialResult()
+            text = json.loads(result)["partial"]
 
+        if text:
+            self._impl.loop.call_soon_threadsafe(
+                self.update, f"{text} ", partial)
 
     def startup(self):
-        """
-        Construct and show the Toga application.
-
-        Usually, you would add your application to a main content box.
-        We then create a main window (with a name matching the app), and
-        show the main window.
-        """
+        self.partial = ""
+        
         file_dir = os.path.dirname(__file__)
         model_dir = os.path.join(
             file_dir, "resources/models/vosk-model-small-en-us-0.15")
