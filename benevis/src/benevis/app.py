@@ -9,15 +9,42 @@ import toga
 import vosk
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
+from threading import Thread
 
 
 class Benevis(toga.App):
 
+    def run_later(self, *args):
+        self._impl.loop.call_soon_threadsafe(*args)
+
+    def listen(self):
+        file_dir = os.path.dirname(__file__)
+        model_dir = os.path.join(
+            file_dir, "resources/models/vosk-model-small-en-us-0.15")
+        model = vosk.Model(model_dir)
+        self.rec = vosk.KaldiRecognizer(model, 16000)
+
+        self.stream = sd.RawInputStream(
+            samplerate=16000,
+            blocksize=8000,
+            device=None,
+            dtype='int16',
+            channels=1,
+            callback=self.callback
+        )
+
+        self.stream.start()
+
     def do_start(self, widget):
-        self.partial = ""
         widget.enabled = False
         self.btn_stop.enabled = True
-        self.stream.start()
+        
+        self.partial = ""
+
+        if self.stream:
+            self.stream.start()
+        else:
+            Thread(target=self.listen).start()
 
     def do_stop(self, widget):
         widget.enabled = False
@@ -38,39 +65,20 @@ class Benevis(toga.App):
             partial = True
             result = self.rec.PartialResult()
             text = json.loads(result)["partial"]
-
         if text:
-            self._impl.loop.call_soon_threadsafe(
-                self.update, f"{text} ", partial)
+            self.run_later(self.update, f"{text} ", partial)
 
     def startup(self):
-        self.partial = ""
-        
-        file_dir = os.path.dirname(__file__)
-        model_dir = os.path.join(
-            file_dir, "resources/models/vosk-model-small-en-us-0.15")
-        model = vosk.Model(model_dir)
-        self.rec = vosk.KaldiRecognizer(model, 16000)
-
-        self.stream = sd.RawInputStream(
-            samplerate=16000,
-            blocksize=8000,
-            device=None,
-            dtype='int16',
-            channels=1,
-            callback=self.callback
-        )
+        self.stream = {}
 
         self.main_window = toga.MainWindow(title=self.name)
-
         self.multiline_input = toga.MultilineTextInput(style=Pack(flex=1))
-
+        
         self.btn_start = toga.Button(
             "Start", on_press=self.do_start, style=Pack(flex=1))
-
+            
         self.btn_stop = toga.Button(
             "Stop", on_press=self.do_stop, style=Pack(flex=1))
-
         self.btn_stop.enabled = False
 
         btn_box = toga.Box(
