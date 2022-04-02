@@ -18,6 +18,8 @@ class Benevis(toga.App):
         self._impl.loop.call_soon_threadsafe(*args)
 
     def listen(self):
+        self.run_later(self.update, "Initializing model... ")
+
         dir = os.path.dirname(__file__)
         model = vosk.Model(os.path.join(dir, self.model_name))
         self.rec = vosk.KaldiRecognizer(model, self.sample_rate)
@@ -30,8 +32,10 @@ class Benevis(toga.App):
             channels=1,
             callback=self.callback
         )
-
         self.stream.start()
+
+        self.run_later(self.update, "Ready. ")
+
 
     def start(self, widget):
         widget.enabled = False
@@ -49,7 +53,7 @@ class Benevis(toga.App):
         self.btn_start.enabled = True
         self.stream.stop()
 
-    def update(self, result, partial=False):
+    def update(self, result, partial=True):
         value = self.multiline_input.value.removesuffix(self.partial)
         self.partial = result if partial else ""
         self.multiline_input.value = value + result
