@@ -21,11 +21,11 @@ class Benevis(toga.App):
         self.run_later(self.update, "Initializing model... ")
 
         dir = os.path.dirname(__file__)
-        model = vosk.Model(os.path.join(dir, self.model_name))
-        self.rec = vosk.KaldiRecognizer(model, self.sample_rate)
+        model = vosk.Model(os.path.join(dir, self.modelname))
+        self.rec = vosk.KaldiRecognizer(model, self.samplerate)
 
         self.stream = sd.RawInputStream(
-            samplerate=self.sample_rate,
+            samplerate=self.samplerate,
             blocksize=self.blocksize,
             device=self.device,
             dtype='int16',
@@ -72,8 +72,8 @@ class Benevis(toga.App):
         self.device = None
         self.stream = None
         self.blocksize = 8000
-        self.sample_rate = 16000
-        self.model_name = "resources/models/vosk-model-small-en-us-0.15"
+        self.samplerate = 16000
+        self.modelname = "resources/models/vosk-model-small-en-us-0.15"
 
         self.main_window = toga.MainWindow(title=self.name)
 
