@@ -36,12 +36,9 @@ class Benevis(toga.App):
 
         self.run_later(self.update, "Ready. ")
 
-
     def start(self, widget):
         widget.enabled = False
         self.btn_stop.enabled = True
-
-        self.partial = ""
 
         if self.stream:
             self.stream.start()
@@ -71,6 +68,7 @@ class Benevis(toga.App):
             self.run_later(self.update, f"{text} ", partial)
 
     def startup(self):
+        self.partial = ""
         self.device = None
         self.stream = None
         self.blocksize = 8000
@@ -78,7 +76,6 @@ class Benevis(toga.App):
         self.model_name = "resources/models/vosk-model-small-en-us-0.15"
 
         self.main_window = toga.MainWindow(title=self.name)
-        self.multiline_input = toga.MultilineTextInput(style=Pack(flex=1))
 
         self.btn_start = toga.Button(
             "Start", on_press=self.start, style=Pack(flex=1))
@@ -87,6 +84,12 @@ class Benevis(toga.App):
             "Stop", on_press=self.stop, style=Pack(flex=1))
 
         self.btn_stop.enabled = False
+
+        self.multiline_input = toga.MultilineTextInput(
+            style=Pack(flex=1)
+        )
+
+        self.update("Click start. ")
 
         btn_box = toga.Box(
             children=[
