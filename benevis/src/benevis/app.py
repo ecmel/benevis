@@ -5,7 +5,7 @@ import json
 import os
 from threading import Thread
 
-import sounddevice as sd
+import sounddevice
 import toga
 import vosk
 from toga.style import Pack
@@ -17,12 +17,16 @@ class Benevis(toga.App):
     def run_later(self, *args):
         self._impl.loop.call_soon_threadsafe(*args)
 
+    def run_parallel(self, target, *args):
+        Thread(target=target, *args).start()
+
     def listen(self):
-        dir = os.path.dirname(__file__)
-        model = vosk.Model(os.path.join(dir, self.modelname))
+        model = vosk.Model(os.path.join(
+            os.path.dirname(__file__), "resources", "models", self.modelname))
+
         self.rec = vosk.KaldiRecognizer(model, self.samplerate)
 
-        self.stream = sd.RawInputStream(
+        self.stream = sounddevice.RawInputStream(
             samplerate=self.samplerate,
             blocksize=self.blocksize,
             device=self.device,
@@ -44,7 +48,7 @@ class Benevis(toga.App):
             self.stream.start()
             self.enable_stop_button()
         else:
-            Thread(target=self.listen).start()
+            self.run_parallel(self.listen)
 
     def stop(self, widget):
         widget.enabled = False
@@ -74,7 +78,7 @@ class Benevis(toga.App):
         self.stream = None
         self.blocksize = 8000
         self.samplerate = 16000
-        self.modelname = "resources/models/vosk-model-small-en-us-0.15"
+        self.modelname = "vosk-model-small-en-us-0.15"
 
         self.main_window = toga.MainWindow(title=self.name)
 
