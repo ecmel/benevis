@@ -111,7 +111,8 @@ class Benevis(toga.App):
         outer_box = toga.Box(
             children=[
                 btn_box,
-                self.multiline_input],
+                self.multiline_input
+            ],
             style=Pack(
                 direction=COLUMN,
                 padding=0
