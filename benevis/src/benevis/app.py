@@ -79,12 +79,14 @@ class Benevis(toga.App):
         self.main_window = toga.MainWindow(title=self.name)
 
         self.btn_start = toga.Button(
-            "Start", on_press=self.start,
+            "Start",
+            on_press=self.start,
             style=Pack(flex=1)
         )
 
         self.btn_stop = toga.Button(
-            "Stop", on_press=self.stop,
+            "Stop",
+            on_press=self.stop,
             style=Pack(flex=1),
             enabled=False
         )
