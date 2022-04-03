@@ -3,13 +3,13 @@ Easy Dictation
 """
 import json
 import os
+from threading import Thread
 
 import sounddevice as sd
 import toga
 import vosk
 from toga.style import Pack
 from toga.style.pack import COLUMN, ROW
-from threading import Thread
 
 
 class Benevis(toga.App):
@@ -18,8 +18,6 @@ class Benevis(toga.App):
         self._impl.loop.call_soon_threadsafe(*args)
 
     def listen(self):
-        self.run_later(self.update, "Initializing model... ")
-
         dir = os.path.dirname(__file__)
         model = vosk.Model(os.path.join(dir, self.modelname))
         self.rec = vosk.KaldiRecognizer(model, self.samplerate)
@@ -32,16 +30,19 @@ class Benevis(toga.App):
             channels=1,
             callback=self.callback
         )
-        self.stream.start()
 
-        self.run_later(self.update, "Ready. ")
+        self.stream.start()
+        self.run_later(self.enable_stop_button)
+
+    def enable_stop_button(self):
+        self.btn_stop.enabled = True
 
     def start(self, widget):
         widget.enabled = False
-        self.btn_stop.enabled = True
 
         if self.stream:
             self.stream.start()
+            self.enable_stop_button()
         else:
             Thread(target=self.listen).start()
 
@@ -78,18 +79,17 @@ class Benevis(toga.App):
         self.main_window = toga.MainWindow(title=self.name)
 
         self.btn_start = toga.Button(
-            "Start", on_press=self.start, style=Pack(flex=1))
-
-        self.btn_stop = toga.Button(
-            "Stop", on_press=self.stop, style=Pack(flex=1))
-
-        self.btn_stop.enabled = False
-
-        self.multiline_input = toga.MultilineTextInput(
+            "Start", on_press=self.start,
             style=Pack(flex=1)
         )
 
-        self.update("Click start. ")
+        self.btn_stop = toga.Button(
+            "Stop", on_press=self.stop,
+            style=Pack(flex=1),
+            enabled=False
+        )
+
+        self.multiline_input = toga.MultilineTextInput(style=Pack(flex=1))
 
         btn_box = toga.Box(
             children=[
