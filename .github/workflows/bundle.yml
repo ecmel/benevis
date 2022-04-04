@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest]
+        platform: [windows-latest, macos-latest, ubuntu-16.04]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
@@ -25,7 +25,7 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip freeze
-          python -m zipget fetch.json
+          python -m zipget requirements.json
           cd benevis
           python -m briefcase build
       - name: Build (Windows)
@@ -37,7 +37,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd benevis
-          plutil -replace NSMicrophoneUsageDescription -string 'Allow mic?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
+          plutil -replace NSMicrophoneUsageDescription -string 'Allow?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
           python -m briefcase package --no-sign
       - name: Build (Linux)
         if: runner.os == 'Linux'

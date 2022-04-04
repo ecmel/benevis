@@ -19,7 +19,7 @@
             ],
             "label": "Install",
             "type": "shell",
-            "command": ".venv/bin/pip install -r requirements.txt && .venv/bin/zipget fetch.json"
+            "command": ".venv/bin/pip install -r requirements.txt && .venv/bin/zipget requirements.json"
         },
         {
             "label": "Debug",
@@ -43,7 +43,7 @@
             ],
             "label": "Allow",
             "type": "shell",
-            "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Mic?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
+            "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Allow?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
         },
         {
             "dependsOn": [
