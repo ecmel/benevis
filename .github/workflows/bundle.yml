@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest]
+        platform: [windows-latest, macos-latest, ubuntu-18.04]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
@@ -27,7 +27,7 @@ jobs:
           python -m pip freeze
           python -m zipget requirements.json
           cd benevis
-          python -m briefcase build
+          python -m briefcase build --no-docker
       - name: Package (Windows)
         if: runner.os == 'Windows'
         run: |
