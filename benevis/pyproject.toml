@@ -2,7 +2,7 @@
 project_name = "Benevis"
 bundle = "org.poido"
 version = "0.0.8"
-url = "https://poido.org/benevis"
+url = "https://github.com/ecmel/benevis"
 license = "MIT license"
 author = 'Ecmel Ercan'
 author_email = "ecmel.ercan@gmail.com"
