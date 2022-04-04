@@ -14,33 +14,12 @@
             "command": "[ -d '.venv' ] && echo 'PASS' || (python3 -m venv .venv && .venv/bin/pip install --upgrade pip)"
         },
         {
-            "label": "Resources",
-            "type": "shell",
-            "options": {
-                "cwd": "benevis/src/benevis/resources"
-            },
-            "command": "mkdir -p models"
-        },
-        {
-            "dependsOn":[
-                "Resources"
-            ],
-            "label": "Bundle",
-            "type": "shell",
-            "options": {
-                "cwd": "benevis/src/benevis/resources/models"
-            },
-            "command": "[ -d 'vosk-model-small-en-us-0.15' ] && echo 'PASS' || (curl --output - 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' | jar xvf /dev/stdin)"
-        },
-        {
             "dependsOn": [
-                "Init",
-                "Bundle"
+                "Init"
             ],
-            "dependsOrder": "sequence",
             "label": "Install",
             "type": "shell",
-            "command": ".venv/bin/pip install -r requirements.txt"
+            "command": ".venv/bin/pip install -r requirements.txt && .venv/bin/zipget fetch.json"
         },
         {
             "label": "Debug",
@@ -59,7 +38,7 @@
             "command": "../.venv/bin/briefcase build"
         },
         {
-            "dependsOn":[
+            "dependsOn": [
                 "Build"
             ],
             "label": "Allow",
@@ -67,7 +46,7 @@
             "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Mic?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
         },
         {
-            "dependsOn":[
+            "dependsOn": [
                 "Allow"
             ],
             "label": "Run",
@@ -78,7 +57,7 @@
             "command": "../.venv/bin/briefcase run"
         },
         {
-            "dependsOn":[
+            "dependsOn": [
                 "Allow"
             ],
             "label": "Package",

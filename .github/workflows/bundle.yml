@@ -26,6 +26,8 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip freeze
           python -m zipget fetch.json
+          cd benevis
+          python -m briefcase build
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -35,6 +37,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd benevis
+          plutil -replace NSMicrophoneUsageDescription -string 'Allow mic?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
           python -m briefcase package --no-sign
       - name: Build (Linux)
         if: runner.os == 'Linux'
