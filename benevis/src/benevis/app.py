@@ -14,11 +14,11 @@ from toga.style.pack import COLUMN, ROW
 
 class Benevis(toga.App):
 
-    def run_later(self, *args):
-        self._impl.loop.call_soon_threadsafe(*args)
+    def run_later(self, callback, *args):
+        self._impl.loop.call_soon_threadsafe(callback, *args)
 
-    def run_parallel(self, target, *args):
-        Thread(target=target, *args).start()
+    def run_parallel(self, target, args=()):
+        Thread(target=target, args=args).start()
 
     def listen(self):
         model = vosk.Model(os.path.join(
