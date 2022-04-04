@@ -26,8 +26,6 @@ jobs:
           python -m pip install -r requirements.txt
           python -m pip freeze
           python -m zipget requirements.json
-          cd benevis
-          python -m briefcase build --no-docker
       - name: Package (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -37,13 +35,15 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           cd benevis
+          python -m briefcase build
           plutil -replace NSMicrophoneUsageDescription -string 'Allow?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
           python -m briefcase package --no-sign
       - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
           cd benevis
-          python -m briefcase package
+          sudo apt install pygobject
+          python -m briefcase package --no-docker
       - name: Upload (Windows)
         if: runner.os == 'Windows'
         uses: AButler/upload-release-assets@v2.0
