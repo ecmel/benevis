@@ -30,4 +30,9 @@ jobs:
           python -m pip freeze
           cd benevis
           python -m briefcase package --no-sign
-          
+      - name: macOS
+        if: runner.os == 'macOS'
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'macOS/*.dmg'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
