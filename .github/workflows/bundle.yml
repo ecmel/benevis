@@ -42,7 +42,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           cd benevis
-          sudo apt-get install pygobject
+          sudo apt-get install -y pygobject
           python -m briefcase package --no-docker
       - name: Upload (Windows)
         if: runner.os == 'Windows'
