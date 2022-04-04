@@ -34,5 +34,11 @@ jobs:
         if: runner.os == 'macOS'
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'macOS/*.dmg'
+          files: 'benevis/macOS/*.dmg'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Windows
+        if: runner.os == 'Windows'
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'benevis/windows/*.msi'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
