@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-20.04]
+        platform: [windows-latest, macos-latest, ubuntu-16.04]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
@@ -27,7 +27,7 @@ jobs:
           python -m pip freeze
           python -m zipget requirements.json
           cd benevis
-          python -m briefcase build
+          python -m briefcase build --no-docker
       - name: Build (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -43,7 +43,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           cd benevis
-          python -m briefcase package
+          python -m briefcase package --no-docker
       - name: Package (Windows)
         if: runner.os == 'Windows'
         uses: AButler/upload-release-assets@v2.0
