@@ -1,4 +1,4 @@
-name: Create App Bundle
+name: Bundle
 
 on:
   release:
@@ -34,11 +34,11 @@ jobs:
         if: runner.os == 'macOS'
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'benevis/macOS/*.dmg'
+          files: 'briefcase/benevis/macOS/*.dmg'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Windows
         if: runner.os == 'Windows'
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'benevis/windows/*.msi'
+          files: 'briefcase/benevis/windows/*.msi'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
