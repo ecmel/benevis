@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-16.04]
+        platform: [windows-latest, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
@@ -27,36 +27,36 @@ jobs:
           python -m pip freeze
           python -m zipget requirements.json
           cd benevis
-          python -m briefcase build --no-docker
-      - name: Build (Windows)
+          python -m briefcase build
+      - name: Package (Windows)
         if: runner.os == 'Windows'
         run: |
           cd benevis
           python -m briefcase package
-      - name: Build (macOS)
+      - name: Package (MacOS)
         if: runner.os == 'macOS'
         run: |
           cd benevis
           plutil -replace NSMicrophoneUsageDescription -string 'Allow?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
           python -m briefcase package --no-sign
-      - name: Build (Linux)
+      - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
           cd benevis
-          python -m briefcase package --no-docker
-      - name: Package (Windows)
+          python -m briefcase package
+      - name: Upload (Windows)
         if: runner.os == 'Windows'
         uses: AButler/upload-release-assets@v2.0
         with:
           files: 'benevis/windows/*.msi'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Package (macOS)
+      - name: Upload (MacOS)
         if: runner.os == 'macOS'
         uses: AButler/upload-release-assets@v2.0
         with:
           files: 'benevis/macOS/*.dmg'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Package (Linux)
+      - name: Upload (Linux)
         if: runner.os == 'Linux'
         uses: AButler/upload-release-assets@v2.0
         with:
