@@ -23,7 +23,7 @@ jobs:
       - name: Init
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get install -y python-gobject
+          sudo apt-get install -y libgirepository1.0-dev
       - name: Install
         run: |
           python -m pip install --upgrade pip
