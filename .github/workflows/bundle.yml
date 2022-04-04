@@ -12,33 +12,49 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [ubuntu-16.04, macos-latest, windows-latest]
+        platform: [macos-latest, windows-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
-        with:
-          path: briefcase
       - name: Install Python
         uses: actions/setup-python@v2
         with:
           python-version: 3.9
-      - name: Package
+      - name: Install
         run: |
-          cd briefcase
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip freeze
+      - name: Build (macOS)
+        if: runner.os == 'macOS'
+        run: |
           cd benevis
           python -m briefcase package --no-sign
-      - name: macOS
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          cd benevis
+          python -m briefcase package
+      - name: Build (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          cd benevis
+          python -m briefcase package
+      - name: Package (macOS)
         if: runner.os == 'macOS'
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'briefcase/benevis/macOS/*.dmg'
+          files: 'benevis/macOS/*.dmg'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Windows
+      - name: Package (Windows)
         if: runner.os == 'Windows'
         uses: AButler/upload-release-assets@v2.0
         with:
-          files: 'briefcase/benevis/windows/*.msi'
+          files: 'benevis/windows/*.msi'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package (Linux)
+        if: runner.os == 'Linux'
+        uses: AButler/upload-release-assets@v2.0
+        with:
+          files: 'benevis/linux/*.AppImage'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
