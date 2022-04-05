@@ -35,19 +35,19 @@
             "options": {
                 "cwd": "benevis"
             },
-            "command": "../.venv/bin/briefcase build"
+            "command": "../.venv/bin/briefcase build --update"
         },
         {
             "dependsOn": [
                 "Build"
             ],
-            "label": "Allow",
+            "label": "Platform",
             "type": "shell",
             "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Allow?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
         },
         {
             "dependsOn": [
-                "Allow"
+                "Platform"
             ],
             "label": "Run",
             "type": "shell",
@@ -58,7 +58,7 @@
         },
         {
             "dependsOn": [
-                "Allow"
+                "Platform"
             ],
             "label": "Package",
             "type": "shell",
