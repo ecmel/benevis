@@ -20,6 +20,29 @@
             "dependsOn": [
                 "Init"
             ],
+            "label": "Download",
+            "type": "shell",
+            "options": {
+                "cwd": ".venv"
+            },
+            "windows": {
+                "command": "if (Test-Path -Path 'vosk-model-small-en-us-0.15.zip') { echo 'PASS' } else { Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip' }"
+            }
+        },
+        {
+            "dependsOn": [
+                "Download"
+            ],
+            "label": "Expand",
+            "type": "shell",
+            "windows": {
+                "command": "if (Test-Path -Path 'benevis\\src\\benevis\\resources\\models\\vosk-model-small-en-us-0.15') { echo 'PASS' } else { Expand-Archive -LiteralPath '.venv\\vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\' }"
+            }
+        },
+        {
+            "dependsOn": [
+                "Expand"
+            ],
             "label": "Install",
             "type": "shell",
             "windows": {
@@ -50,29 +73,8 @@
             "command": "../.venv/bin/briefcase build --update"
         },
         {
-            "label": "Resources",
-            "type": "shell",
-            "options": {
-                "cwd": ".venv"
-            },
-            "windows": {
-                "command": "Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip'"
-            }
-        },
-        {
             "dependsOn": [
-                "Resources"
-            ],
-            "label": "Expand",
-            "type": "shell",
-            "windows": {
-                "command": "Expand-Archive -LiteralPath '.venv\\vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\'"
-            }
-        },
-        {
-            "dependsOn": [
-                "Build",
-                "Expand"
+                "Build"
             ],
             "label": "Platform",
             "type": "shell",
