@@ -50,8 +50,29 @@
             "command": "../.venv/bin/briefcase build --update"
         },
         {
+            "label": "Resources",
+            "type": "shell",
+            "options": {
+                "cwd": ".venv"
+            },
+            "windows": {
+                "command": "Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip'"
+            }
+        },
+        {
             "dependsOn": [
-                "Build"
+                "Resources"
+            ],
+            "label": "Expand",
+            "type": "shell",
+            "windows": {
+                "command": "Expand-Archive -LiteralPath '.venv\\vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\'"
+            }
+        },
+        {
+            "dependsOn": [
+                "Build",
+                "Expand"
             ],
             "label": "Platform",
             "type": "shell",
