@@ -8,5 +8,10 @@
         "**/__pycache__": true,
         "**/.pytest_cache": true
     },
+    "git.enableSmartCommit": true,
+    "git.confirmSync": false,
+    "task.problemMatchers.neverPrompt": {
+        "shell": true
+    },
     "python.terminal.activateEnvInCurrentTerminal": true
 }
