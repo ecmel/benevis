@@ -11,7 +11,10 @@
         {
             "label": "Init",
             "type": "shell",
-            "command": "[ -d '.venv' ] && echo 'PASS' || (python3 -m venv .venv && .venv/bin/pip install --upgrade pip)"
+            "windows": {
+                "command": "if (Test-Path -Path '.venv') { echo 'PASS' } else { python -m venv .venv }"
+            },
+            "command": "[ -d '.venv' ] && echo 'PASS' || python3 -m venv .venv"
         },
         {
             "dependsOn": [
@@ -19,13 +22,19 @@
             ],
             "label": "Install",
             "type": "shell",
-            "command": ".venv/bin/pip install -r requirements.txt && .venv/bin/zipget requirements.json"
+            "windows": {
+                "command": ".venv\\Scripts\\pip install -r requirements.txt"
+            },
+            "command": ".venv/bin/pip install -r requirements.txt"
         },
         {
             "label": "Debug",
             "type": "shell",
             "options": {
                 "cwd": "benevis"
+            },
+            "windows": {
+                "command": "..\\.venv\\Scripts\\briefcase dev"
             },
             "command": "../.venv/bin/briefcase dev"
         },
@@ -35,6 +44,9 @@
             "options": {
                 "cwd": "benevis"
             },
+            "windows": {
+                "command": "..\\.venv\\Scripts\\briefcase build --update"
+            },
             "command": "../.venv/bin/briefcase build --update"
         },
         {
@@ -43,7 +55,9 @@
             ],
             "label": "Platform",
             "type": "shell",
-            "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Allow?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
+            "osx": {
+                "command": "[ -d 'benevis/macOS' ] && plutil -replace NSMicrophoneUsageDescription -string 'Allow?' benevis/macOS/app/Benevis/Benevis.app/Contents/Info.plist || echo 'PASS'"
+            }
         },
         {
             "dependsOn": [
@@ -53,6 +67,9 @@
             "type": "shell",
             "options": {
                 "cwd": "benevis"
+            },
+            "windows": {
+                "command": "..\\.venv\\Scripts\\briefcase run"
             },
             "command": "../.venv/bin/briefcase run"
         },
@@ -64,6 +81,9 @@
             "type": "shell",
             "options": {
                 "cwd": "benevis"
+            },
+            "windows": {
+                "command": "..\\.venv\\Scripts\\briefcase package"
             },
             "command": "../.venv/bin/briefcase package --no-sign"
         }
