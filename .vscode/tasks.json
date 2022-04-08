@@ -52,24 +52,18 @@
         {
             "label": "Debug",
             "type": "shell",
-            "options": {
-                "cwd": "benevis"
-            },
             "windows": {
-                "command": "..\\.venv\\Scripts\\briefcase dev"
+                "command": "cd benevis && ..\\.venv\\Scripts\\briefcase dev"
             },
-            "command": "../.venv/bin/briefcase dev"
+            "command": "cd benevis && ../.venv/bin/briefcase dev"
         },
         {
             "label": "Build",
             "type": "shell",
-            "options": {
-                "cwd": "benevis"
-            },
             "windows": {
-                "command": "..\\.venv\\Scripts\\briefcase build --update"
+                "command": "cd benevis && ..\\.venv\\Scripts\\briefcase build --update"
             },
-            "command": "../.venv/bin/briefcase build --update"
+            "command": "cd benevis && ../.venv/bin/briefcase build --update"
         },
         {
             "dependsOn": [
@@ -87,13 +81,10 @@
             ],
             "label": "Run",
             "type": "shell",
-            "options": {
-                "cwd": "benevis"
-            },
             "windows": {
-                "command": "..\\.venv\\Scripts\\briefcase run"
+                "command": "cd benevis && ..\\.venv\\Scripts\\briefcase run"
             },
-            "command": "../.venv/bin/briefcase run"
+            "command": "cd benevis && ../.venv/bin/briefcase run"
         },
         {
             "dependsOn": [
@@ -101,13 +92,10 @@
             ],
             "label": "Package",
             "type": "shell",
-            "options": {
-                "cwd": "benevis"
-            },
             "windows": {
-                "command": "..\\.venv\\Scripts\\briefcase package"
+                "command": "cd benevis && ..\\.venv\\Scripts\\briefcase package"
             },
-            "command": "../.venv/bin/briefcase package --no-sign"
+            "command": "cd benevis && ../.venv/bin/briefcase package --no-sign"
         }
     ]
 }
