@@ -29,15 +29,19 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
           python -m pip freeze
-          python -m zipget requirements.json
       - name: Package (Windows)
         if: runner.os == 'Windows'
+        shell: pwsh
         run: |
+          Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip'
+          Expand-Archive -LiteralPath 'vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\'
           cd benevis
           python -m briefcase package
       - name: Package (MacOS)
         if: runner.os == 'macOS'
         run: |
+          wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'
+          unzip -d benevis/src/benevis/resources/models/ vosk-model-small-en-us-0.15.zip
           cd benevis
           python -m briefcase build
           plutil -replace NSMicrophoneUsageDescription -string 'Allow?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
@@ -45,6 +49,8 @@ jobs:
       - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
+          wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'
+          unzip -d benevis/src/benevis/resources/models/ vosk-model-small-en-us-0.15.zip
           cd benevis
           python -m briefcase package --no-docker
       - name: Upload (Windows)
