@@ -22,13 +22,10 @@
             ],
             "label": "Download",
             "type": "shell",
-            "options": {
-                "cwd": ".venv"
-            },
             "windows": {
-                "command": "if (Test-Path -Path 'vosk-model-small-en-us-0.15.zip') { echo 'PASS' } else { Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip' }"
+                "command": "if (Test-Path -Path '.venv\\vosk-model-small-en-us-0.15.zip') { echo 'PASS' } else { Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile '.venv\\vosk-model-small-en-us-0.15.zip' }"
             },
-            "command": "[ -d 'vosk-model-small-en-us-0.15.zip' ] && echo 'PASS' || wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'"
+            "command": "[ -d 'vosk-model-small-en-us-0.15.zip' ] && echo 'PASS' || wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -O .venv/vosk-model-small-en-us-0.15.zip"
         },
         {
             "dependsOn": [
