@@ -27,7 +27,8 @@
             },
             "windows": {
                 "command": "if (Test-Path -Path 'vosk-model-small-en-us-0.15.zip') { echo 'PASS' } else { Invoke-WebRequest -Uri 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip' -OutFile 'vosk-model-small-en-us-0.15.zip' }"
-            }
+            },
+            "command": "[ -d 'vosk-model-small-en-us-0.15.zip' ] && echo 'PASS' || wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'"
         },
         {
             "dependsOn": [
@@ -37,7 +38,8 @@
             "type": "shell",
             "windows": {
                 "command": "if (Test-Path -Path 'benevis\\src\\benevis\\resources\\models\\vosk-model-small-en-us-0.15') { echo 'PASS' } else { Expand-Archive -LiteralPath '.venv\\vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\' }"
-            }
+            },
+            "command": "[ -d 'benevis/src/benevis/resources/models/vosk-model-small-en-us-0.15.zip' ] && echo 'PASS' || unzip -d benevis/src/benevis/resources/models/ .venv/vosk-model-small-en-us-0.15.zip"
         },
         {
             "dependsOn": [
