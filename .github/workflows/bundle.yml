@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        platform: [windows-latest, macos-latest, ubuntu-18.04]
+        platform: [windows-latest, macos-latest, ubuntu-20.04]
     steps:
       - name: Checkout
         uses: actions/checkout@v2    
@@ -37,11 +37,14 @@ jobs:
           Expand-Archive -LiteralPath 'vosk-model-small-en-us-0.15.zip' -DestinationPath 'benevis\\src\\benevis\\resources\\models\\'
           cd benevis
           python -m briefcase package
-      - name: Package (MacOS)
-        if: runner.os == 'macOS'
+      - name: Download (MacOS and Linux)
+        if: runner.os != 'Windows'
         run: |
           wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'
           unzip -d benevis/src/benevis/resources/models/ vosk-model-small-en-us-0.15.zip
+      - name: Package (MacOS)
+        if: runner.os == 'macOS'
+        run: |
           cd benevis
           python -m briefcase build
           plutil -replace NSMicrophoneUsageDescription -string 'Allow?' macOS/app/Benevis/Benevis.app/Contents/Info.plist
@@ -49,8 +52,6 @@ jobs:
       - name: Package (Linux)
         if: runner.os == 'Linux'
         run: |
-          wget 'https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip'
-          unzip -d benevis/src/benevis/resources/models/ vosk-model-small-en-us-0.15.zip
           cd benevis
           python -m briefcase package --no-docker
       - name: Upload (Windows)
